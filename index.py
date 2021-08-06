@@ -37,5 +37,6 @@ def schedule_delete(f):
     time.sleep(6)
     os.remove(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], f))
 
+
 if __name__ == '__main__':
     app.run()
