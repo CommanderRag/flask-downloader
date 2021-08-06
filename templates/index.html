@@ -41,15 +41,27 @@
                 },
                 body: JSON.stringify({'url': url})
             });
-                var link = await response.text()
-                if(link === "400")
-                {
-                    alert("Cannot download!")
-                }
-                else
-                {
-                    window.location = link;
-                }
+                // var link = await response.text()
+                // if(link === "400")
+                // {
+                //     alert("Cannot download!")
+                // }
+                // else
+                // {
+                var a = document.createElement("a");
+                document.body.appendChild(a)
+                a.style = "display: none"
+            
+                var filename = response.headers.get('Content-Disposition');
+                filename = filename.substring(filename.indexOf('=') + 1)
+                var blob = await response.blob()
+                var windowUrl = window.URL.createObjectURL(blob)
+                a.href = windowUrl;
+                a.download = filename
+                a.click()
+                window.URL.revokeObjectURL*windowUrl
+                    
+                // }
 
             }
             else
