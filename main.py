@@ -28,7 +28,7 @@ def download():
         if(re.match(title, f)):
             thread = threading.Thread(target=schedule_delete, args=[f])
             thread.start()
-            return send_from_directory(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], f), as_attachment=True)
+            return send_from_directory(directory=os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), filename=f, as_attachment=True)
 
 
     return "400"
