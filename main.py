@@ -13,25 +13,22 @@ def index():
 @app.route('/download', methods=['POST'])
 def download():
 
-    ydl = youtube_dl.YoutubeDL({'outtmpl': 'downloaded/%(title)s.%(ext)s', 'format': 'best', 'geo-bypass': True})
+    ydl = youtube_dl.YoutubeDL({'outtmpl': 'downloaded/%(title)s.%(ext)s', 'format': 'best'})
 
     r = request.get_json(force=True)
     url = r['url']
-    result = ydl.extract_info(url=url, download=False, process=True)
+    result = ydl.extract_info(url=url, download=True)
     
-    if(result.get('url') == None):
-        return "400"
-
-    return result.get('url')    
+    title = result.get('title')
 
     print("Info url:", url) 
-    # print(result)
 
-    # for f in os.listdir(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])):
-    #     if(re.match(title, f)):
-    #         thread = threading.Thread(target=schedule_delete, args=[f])
-    #         thread.start()
-    #         return send_from_directory(app.config['UPLOAD_FOLDER'], f, as_attachment=True)
+
+    for f in os.listdir(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])):
+        if(re.match(title, f)):
+            thread = threading.Thread(target=schedule_delete, args=[f])
+            thread.start()
+            return send_from_directory(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], f), as_attachment=True)
 
 
     return "400"
