@@ -68,9 +68,10 @@
                     let receivedLength = 0;
                     let chunks = [];
 
-                    if(contentLength === 3)
+                    if(contentLength == 3)
                     {
-                        alert('Cannot Download!')
+                        document.getElementById('spinner').style.display = "none";
+                        alert('Cannot Download, Invalid URL!');
                         return;
                     }
 
