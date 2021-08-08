@@ -68,6 +68,12 @@
                     let receivedLength = 0;
                     let chunks = [];
 
+                    if(contentLength === 3)
+                    {
+                        alert('Cannot Download!')
+                        return;
+                    }
+
                     while(true)
                     {
                         const {done, value} = await reader.read();
@@ -82,6 +88,7 @@
                     }
 
                     var toDownload = filename.split("filename=")[1].split(";")[0]
+                    toDownload = toDownload.substring(1, toDownload.length);
                     var windowUrl = window.URL.createObjectURL(new Blob(chunks))
                     a.href = windowUrl;
                     a.download = toDownload

@@ -17,7 +17,12 @@ def download():
 
     r = request.get_json(force=True)
     url = r['url']
-    result = ydl.extract_info(url=url, download=True)
+    try:
+        result = ydl.extract_info(url=url, download=True)
+    except Exception as e:
+        print(e)
+        return "400"
+
     
     title = result.get('title')
 
