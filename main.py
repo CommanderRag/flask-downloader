@@ -28,11 +28,16 @@ def download():
         if(re.match(title, f)):
             thread = threading.Thread(target=schedule_delete, args=[f])
             thread.start()
-            return send_from_directory(directory=os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), filename=f, as_attachment=True)
+            return send_from_directory('downloaded', f, as_attachment=True)
+            # return send_from_directory(directory=os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), filename=f, as_attachment=True)
 
 
     return "400"
     
+@app.route('/favicon.ico', methods=['GET'])
+def favicon():
+    return send_from_directory(app.root_path, 'favicon.ico', as_attachment=True)
+
 def schedule_delete(f):
     time.sleep(6)
     os.remove(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], f))

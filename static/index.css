@@ -158,6 +158,47 @@ body {
 	}
 }
 
+.spinner {
+	display: none;
+	animation: 1.5s linear infinite spinner;
+	animation-play-state: inherit;
+	border: solid 5px #cfd0d1;
+	border-bottom-color: #1cc99e;
+	border-radius: 50%;
+	float: right;
+	content: "";
+	height: 39px;
+	position: absolute;
+	bottom: 45%;
+	right: 25%;
+	transform: translate3d(-50%, -50%, 0);
+	width: 39px;
+	will-change: transform;
+  }
+
+@keyframes spinner {
+    0% {
+	  transform: translate3d(-50%, -50%, 0) rotate(0deg);
+	}
+	100% {
+	  transform: translate3d(-50%, -50%, 0) rotate(360deg);
+	}
+}
+
+@media screen and (max-width: 300px) {
+	.spinner::before{
+		right: 3%;
+		bottom: 44%;
+	}
+}
+
+@media screen and (max-height: 600px) {
+	.spinner::before{
+		right: inherit;
+		bottom: 30%;
+	}
+}
+
 body {
   overflow:hidden;
   position:relative;

@@ -7,7 +7,7 @@
         
         <title>Search</title>
         
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 
@@ -23,9 +23,14 @@
 
     <div class="search-bar" id="search-bar">
         <input id="input-field" type="search" pattern=".*\S.*" required autocomplete="off">
-            <button class="search-btn" onclick="loadData()">
-               <span>Search</span>
-            </button>
+        <button class="search-btn" onclick="loadData()">
+           <span>Search</span>
+        </button>
+        
+    </div>
+
+    <div class="spinner" id="spinner">
+            
     </div>
 
     <script>
@@ -34,6 +39,8 @@
             var url = $('#input-field').val();
             if(isValidURL(url))
             {
+                
+                document.getElementById('spinner').style.display = "block";
                 const response = await fetch('/download', {
                 method: 'POST',
                 headers: {
@@ -52,22 +59,44 @@
                     var a = document.createElement("a");
                     document.body.appendChild(a)
                     a.style = "display: none"
-                
+
                     var filename = response.headers.get('Content-Disposition');
-                    filename = filename.substring(filename.indexOf('=') + 1)
-                    var blob = await response.blob()
-                    var windowUrl = window.URL.createObjectURL(blob)
-                    a.href = windowUrl;
-                    a.download = filename
-                    a.click()
-                    window.URL.revokeObjectURL(windowUrl)
                     
+                    const contentLength = response.headers.get('Content-Length');
+                    const reader = await response.body.getReader();
+
+                    let receivedLength = 0;
+                    let chunks = [];
+
+                    while(true)
+                    {
+                        const {done, value} = await reader.read();
+
+                        if(done){
+                            break;
+                        }
+
+                        chunks.push(value);
+                        receivedLength += value.length;
+                        
+                    }
+
+                    var toDownload = filename.split("filename=")[1].split(";")[0]
+                    var windowUrl = window.URL.createObjectURL(new Blob(chunks))
+                    a.href = windowUrl;
+                    a.download = toDownload
+                    a.click()
+
+                    document.getElementById('spinner').style.display = "none";
+                    
+                    window.URL.revokeObjectURL(windowUrl)
                 // }
 
             }
             else
             {
-                alert("Invalid URL!")
+                alert("Invalid URL!");
+                document.getElementById('spinner').style.display = "none";
             }
             
         }
