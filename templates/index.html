@@ -48,57 +48,48 @@
                 },
                 body: JSON.stringify({'url': url})
             });
-                // var link = await response.text()
-                // if(link === "400")
-                // {
-                //     alert("Cannot download!")
-                // }
-                // else
-                // {
-                //     window.location.href = link;
-                    var a = document.createElement("a");
-                    document.body.appendChild(a)
-                    a.style = "display: none"
+            var a = document.createElement("a");
+            document.body.appendChild(a)
+            a.style = "display: none"
 
-                    var filename = response.headers.get('Content-Disposition');
-                    
-                    const contentLength = response.headers.get('Content-Length');
-                    const reader = await response.body.getReader();
+            var filename = response.headers.get('Content-Disposition');
+            
+            const contentLength = response.headers.get('Content-Length');
+            const reader = await response.body.getReader();
 
-                    let receivedLength = 0;
-                    let chunks = [];
+            let receivedLength = 0;
+            let chunks = [];
 
-                    if(contentLength == 3)
-                    {
-                        document.getElementById('spinner').style.display = "none";
-                        alert('Cannot Download, Invalid URL!');
-                        return;
-                    }
+            if(contentLength == 3)
+            {
+                document.getElementById('spinner').style.display = "none";
+                alert('Cannot Download, Invalid URL!');
+                return;
+            }
 
-                    while(true)
-                    {
-                        const {done, value} = await reader.read();
+            while(true)
+            {
+                const {done, value} = await reader.read();
 
-                        if(done){
-                            break;
-                        }
+                if(done){
+                    break;
+                }
 
-                        chunks.push(value);
-                        receivedLength += value.length;
-                        
-                    }
+                chunks.push(value);
+                receivedLength += value.length;
+                
+            }
 
-                    var toDownload = filename.split("filename=")[1].split(";")[0]
-                    toDownload = toDownload.substring(1, toDownload.length);
-                    var windowUrl = window.URL.createObjectURL(new Blob(chunks))
-                    a.href = windowUrl;
-                    a.download = toDownload
-                    a.click()
+            var toDownload = filename.split("filename=")[1].split(";")[0]
+            toDownload = toDownload.substring(1, toDownload.length - 1);
+            var windowUrl = window.URL.createObjectURL(new Blob(chunks))
+            a.href = windowUrl;
+            a.download = toDownload
+            a.click()
 
-                    document.getElementById('spinner').style.display = "none";
-                    
-                    window.URL.revokeObjectURL(windowUrl)
-                // }
+            document.getElementById('spinner').style.display = "none";
+            
+            window.URL.revokeObjectURL(windowUrl)
 
             }
             else
