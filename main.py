@@ -15,7 +15,7 @@ def index():
 @app.route('/download', methods=['POST'])
 def download():
 
-    ydl_info = youtube_dl.YoutubeDL({'format', 'best'})
+    ydl_info = youtube_dl.YoutubeDL({'format': 'best'})
 
     r = request.get_json(force=True)
     url = r['url']
