@@ -6,6 +6,8 @@ app = Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = "downloaded"
 
+keepcharacters = (' ', '.', '_', '&', '-', '!', '#', '(', ')')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
@@ -31,11 +33,9 @@ def download():
 
     for f in os.listdir(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])):
         if(re.match(title, f)):
-            thread = threading.Thread(target=schedule_delete, args=[f])
-            thread.start()
-            return send_from_directory('downloaded', f, as_attachment=True)
-            # return send_from_directory(directory=os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), filename=f, as_attachment=True)
-
+            safe_string = "".join(n for n in f if n.isalnum() or n in keepcharacters).rstrip()
+            os.rename('downloaded/' + f, 'downloaded/' + safe_string)
+            return send_from_directory('downloaded', safe_string, as_attachment=True), schedule_delete(safe_string)
 
     return "400"
     

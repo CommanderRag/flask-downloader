@@ -187,17 +187,17 @@ body {
 
 @media screen and (max-width: 300px) {
 	.spinner{
-		right: 3%;
+		right: 1%;
 		bottom: 54%;
 	}
 }
 
-@media screen and (max-height: 600px) {
+/* @media screen and (max-height: 600px) {
 	.spinner{
 		right: inherit;
 		bottom: 30%;
 	}
-}
+} */
 
 body {
   overflow:hidden;
