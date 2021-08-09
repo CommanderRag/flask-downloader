@@ -15,29 +15,25 @@ def index():
 @app.route('/download', methods=['POST'])
 def download():
 
-    ydl = youtube_dl.YoutubeDL({'outtmpl': 'downloaded/%(title)s.%(ext)s', 'format': 'best'})
+    ydl_info = youtube_dl.YoutubeDL({'format', 'best'})
 
     r = request.get_json(force=True)
     url = r['url']
+    
+    info = ydl_info.extract_info(url=url, download=False)
+
+    filename = info.get('title') + '.' + info.get('ext')
+
+    ydl = youtube_dl.YoutubeDL({'outtmpl': 'downloaded/' + filename, 'format': 'best'})
+
     try:
         result = ydl.extract_info(url=url, download=True)
     except Exception as e:
         print(e)
         return "400"
 
-    
-    title = result.get('title')
+    return send_from_directory('downloaded', filename, as_attachment=True), schedule_delete(filename)
 
-    print("Info url:", url) 
-
-
-    for f in os.listdir(os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])):
-        if(re.match(title, f)):
-            safe_string = "".join(n for n in f if n.isalnum() or n in keepcharacters).rstrip()
-            os.rename('downloaded/' + f, 'downloaded/' + safe_string)
-            return send_from_directory('downloaded', safe_string, as_attachment=True), schedule_delete(safe_string)
-
-    return "400"
     
 @app.route('/favicon.ico', methods=['GET'])
 def favicon():
