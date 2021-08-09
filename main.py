@@ -20,7 +20,11 @@ def download():
     r = request.get_json(force=True)
     url = r['url']
     
-    info = ydl_info.extract_info(url=url, download=False)
+    try:
+        info = ydl_info.extract_info(url=url, download=False)
+    except Exception as e:
+        print(e)
+        return "400"    
 
     filename = info.get('title') + '.' + info.get('ext')
 
